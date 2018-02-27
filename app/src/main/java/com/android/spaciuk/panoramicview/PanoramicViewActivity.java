@@ -21,7 +21,6 @@ import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -139,7 +138,12 @@ public class PanoramicViewActivity extends Activity {
             }
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.i(TAG,"Incoming message: " + new String(message.getPayload()));
+                String message_payload = new String(message.getPayload());
+                Log.i(TAG,"Incoming message: " + message_payload);
+                if(message_payload.contains(first_message_part)){
+                    String[] split = message_payload.split(first_message_part);
+                    changeImage(split[1].trim()); // Look ! It must pass the name of the file only.
+                }
             }
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
@@ -149,7 +153,7 @@ public class PanoramicViewActivity extends Activity {
 
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
-        mqttConnectOptions.setCleanSession(false);
+        mqttConnectOptions.setCleanSession(true);
         mqttConnectOptions.setUserName(mqtt_user);
         mqttConnectOptions.setPassword(mqtt_password.toCharArray());
 
@@ -189,21 +193,6 @@ public class PanoramicViewActivity extends Activity {
                     Log.i(TAG,"Failed to subscribe");
                 }
             });
-
-            // THIS DOES NOT WORK!
-            mqttAndroidClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    // message Arrived!
-                    String message_payload = new String(message.getPayload());
-                    Log.i(TAG,"Message: " + topic + " : " + message_payload);
-                    if(message_payload.contains(first_message_part)){
-                        String[] split = message_payload.split(first_message_part);
-                        changeImage(split[0]); // Look ! It must pass the name of the file only.
-                    }
-                }
-            });
-
         } catch (MqttException ex){
             Log.e(TAG,"Exception whilst subscribing");
             ex.printStackTrace();

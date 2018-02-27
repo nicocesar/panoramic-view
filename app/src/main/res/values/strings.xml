@@ -2,8 +2,8 @@
     <string name="app_name">Panoramic View</string>
     <string name="mqtt_server_url">tcp://10.0.0.53:1883</string>
     <string name="topic_name">topic1</string>
-    <string name="client_id">AndroidDevice</string>
+    <string name="client_id">periscope</string>
     <string name="mqtt_user">test</string>
     <string name="mqtt_password">test123</string>
-    <string name="first_message_part">ACTIVATE giroscope </string>
+    <string name="first_message_part">ACTIVATE periscope </string>
 </resources>
