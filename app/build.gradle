@@ -6,8 +6,8 @@ android {
         applicationId "com.android.spaciuk.panoramicview"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.3"
+        versionCode 5
+        versionName "1.3.1"
     }
     buildTypes {
         release {
